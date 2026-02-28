@@ -7,16 +7,13 @@ WatchTarget repository.
 from __future__ import annotations
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session
 
 from core.db.models.watch_target import WatchTarget
+from core.repositories.base import RepositoryBase
 
 
-class WatchTargetRepository:
+class WatchTargetRepository(RepositoryBase):
     """DB access helpers for WatchTarget."""
-
-    def __init__(self, session: Session) -> None:
-        self._session = session
 
     def list_active(self) -> list[WatchTarget]:
         """Return all active watch targets."""
