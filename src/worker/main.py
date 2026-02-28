@@ -18,7 +18,9 @@ def main() -> int:
 
     with engine.connect() as conn:
         conn.execute(text("SELECT 1"))
+
     print("db_ok")
+
     return 0
 
 
