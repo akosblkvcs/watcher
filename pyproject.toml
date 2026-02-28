@@ -1,7 +1,12 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "watcher"
 version = "0.1.0"
 description = "Lightweight web watcher service with a dashboard and persistent storage."
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
   "flask>=3.0",
@@ -20,6 +25,12 @@ dev = [
   "pytest>=8.0",
   "ruff>=0.6.0",
 ]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.ruff]
 line-length = 100
