@@ -2,7 +2,7 @@
 Alembic environment configuration file.
 """
 
-# pylint: disable=no-member,import-error
+# pylint: disable=no-member,import-error,unused-import
 
 import os
 
@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from alembic import context
 
 from core.db.base import Base
-from core.db import models  # pylint: disable=unused-import
+from core.db import models  # type: ignore  # noqa: F401
 
 
 load_dotenv()

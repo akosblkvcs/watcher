@@ -2,7 +2,7 @@
 Defines the WatchRun model for the database.
 """
 
-# pylint: disable=not-callable
+# pylint: disable=not-callable,too-few-public-methods
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from core.db.base import Base
 
 
-class WatchRun(Base):  # pylint: disable=too-few-public-methods
+class WatchRun(Base):
     """ORM model for a watch run."""
 
     __tablename__ = "watch_runs"

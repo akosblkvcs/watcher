@@ -19,3 +19,8 @@ class Settings(BaseSettings):
     http_timeout_seconds: int = 20
     http_retries: int = 2
     user_agent: str = "watcher/0.1"
+
+    def validate_required(self) -> None:
+        """Raise if required settings are missing."""
+        if not self.database_url:
+            raise ValueError("DATABASE_URL is required (set it in .env).")

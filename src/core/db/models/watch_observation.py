@@ -2,7 +2,7 @@
 Defines the WatchObservation model for the database.
 """
 
-# pylint: disable=not-callable
+# pylint: disable=not-callable,too-few-public-methods
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from core.db.base import Base
 
 
-class WatchObservation(Base):  # pylint: disable=too-few-public-methods
+class WatchObservation(Base):
     """ORM model for a watch observation."""
 
     __tablename__ = "watch_observations"

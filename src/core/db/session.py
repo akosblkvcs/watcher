@@ -1,5 +1,5 @@
 """
-Database session factory.
+Database session maker.
 """
 
 from __future__ import annotations
@@ -9,8 +9,8 @@ from sqlalchemy.orm import sessionmaker
 from core.db.engine import build_engine
 
 
-def build_session_factory(database_url: str):
-    """Builds a SQLAlchemy session factory for the given database URL."""
+def build_session_maker(database_url: str):
+    """Builds a SQLAlchemy session maker for the given database URL."""
 
     engine = build_engine(database_url)
 

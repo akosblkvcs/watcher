@@ -2,7 +2,7 @@
 Defines the WatchTarget model for the database.
 """
 
-# pylint: disable=not-callable
+# pylint: disable=not-callable,too-few-public-methods
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from core.db.base import Base
 
 
-class WatchTarget(Base):  # pylint: disable=too-few-public-methods
+class WatchTarget(Base):
     """ORM model for a watch target."""
 
     __tablename__ = "watch_targets"
