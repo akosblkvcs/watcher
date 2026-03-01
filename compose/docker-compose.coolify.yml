@@ -4,9 +4,3 @@ services:
       context: .
       dockerfile: docker/web.Dockerfile
     restart: unless-stopped
-
-  worker:
-    build:
-      context: .
-      dockerfile: docker/worker.Dockerfile
-    restart: "no"
