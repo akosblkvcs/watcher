@@ -1,9 +1,3 @@
-"""
-Shared repository base for SQLAlchemy session helpers.
-"""
-
-# pylint: disable=too-few-public-methods
-
 from __future__ import annotations
 
 from sqlalchemy.orm import Session
@@ -17,5 +11,5 @@ class RepositoryBase:
         self._session = session
 
     def flush(self) -> None:
-        """Flush pending changes so PKs (ids) are available."""
+        """Flush pending changes so ids are available."""
         self._session.flush()

@@ -1,37 +1,32 @@
-"""
-Manages a database session and transaction boundaries using the Unit of Work
-pattern.
-"""
-
 from __future__ import annotations
 
+from collections.abc import Callable
 from contextlib import AbstractContextManager
 from types import TracebackType
-from typing import Callable, TypeVar
 
 from sqlalchemy.orm import Session
 
 
-ExcT = TypeVar("ExcT", bound=BaseException)
-
-
 class UnitOfWork(AbstractContextManager["UnitOfWork"]):
-    """Session + transaction boundary for a single logical operation."""
+    """Transaction boundary for a single logical operation."""
 
     def __init__(self, session_factory: Callable[[], Session]) -> None:
+        """Initialize the unit of work."""
         self._session_factory = session_factory
         self.session: Session | None = None
 
-    def __enter__(self) -> "UnitOfWork":
+    def __enter__(self) -> UnitOfWork:
+        """Create and bind a new session."""
         self.session = self._session_factory()
         return self
 
     def __exit__(
         self,
         exc_type: type[BaseException] | None,
-        exc: BaseException | None,
-        tb: TracebackType | None,
+        _exc: BaseException | None,
+        _tb: TracebackType | None,
     ) -> None:
+        """Commit or rollback transaction, then close session."""
         assert self.session is not None
 
         try:

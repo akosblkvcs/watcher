@@ -35,11 +35,19 @@
                     {% endif %}
                 </td>
                 <td>{{ 'yes' if t.active else 'no' }}</td>
-                <td>{{ t.last_run_at or '' }}</td>
-                <td>{{ t.last_status or '' }}</td>
-                <td><code>{{ t.last_processed_text or '' }}</code></td>
-                <td><code>{{ t.last_error_message or '' }}</code></td>
-                <td>{{ t.last_duration_ms or '' }}</td>
+                <td>{{ t.last_run_at if t.last_run_at else '' }}</td>
+                <td>{{ t.last_status if t.last_status else '' }}</td>
+                <td>
+                    {% if t.last_processed_text %}
+                    <code>{{ t.last_processed_text }}</code>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if t.last_error_message %}
+                    <code>{{ t.last_error_message }}</code>
+                    {% endif %}
+                </td>
+                <td>{{ t.last_duration_ms if t.last_duration_ms else '' }}</td>
             </tr>
             {% endfor %}
         </tbody>

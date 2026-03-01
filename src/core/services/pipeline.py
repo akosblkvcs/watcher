@@ -1,9 +1,3 @@
-"""
-End-to-end pipeline.
-
-Fetch HTML, extract texts, and post-process results.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -16,31 +10,25 @@ from core.services.processors import PROCESSORS
 @dataclass(frozen=True)
 class PipelineParams:
     """Pipeline input parameters."""
+
     url: str
     selector_type: str
     selector: str
     processor_type: str
     processor_config: dict[str, object] | None
-    user_agent: str
-    timeout_seconds: int
 
 
 @dataclass(frozen=True)
 class PipelineResult:
     """Pipeline output containing raw and processed text."""
+
     raw_text: str
     processed_text: str
 
 
 def run_pipeline(*, params: PipelineParams) -> PipelineResult:
-    """
-    Run fetch -> extract -> process pipeline and return raw and processed text.
-    """
-    fetch = fetch_html(
-        params.url,
-        user_agent=params.user_agent,
-        timeout_seconds=params.timeout_seconds,
-    )
+    """Run fetch -> extract -> process pipeline and return raw and processed text."""
+    fetch = fetch_html(params.url)
 
     extracted = extract_texts_from_html(
         fetch.text,

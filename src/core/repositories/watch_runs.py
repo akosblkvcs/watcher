@@ -1,9 +1,3 @@
-"""
-WatchRun repository.
-"""
-
-# pylint: disable=import-error
-
 from __future__ import annotations
 
 from core.db.models.watch_run import WatchRun

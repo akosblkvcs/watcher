@@ -27,10 +27,22 @@
                 <td>{{ o.target_id }}</td>
                 <td>{{ o.observed_at }}</td>
                 <td>{{ 'yes' if o.changed else 'no' }}</td>
-                <td><code>{{ o.previous_processed_text or '' }}</code></td>
-                <td><code>{{ o.processed_text or '' }}</code></td>
-                <td><code>{{ o.error_message or '' }}</code></td>
-                <td>{{ o.duration_ms or '' }}</td>
+                <td>
+                    {% if o.previous_processed_text %}
+                    <code>{{ o.previous_processed_text }}</code>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if o.processed_text %}
+                    <code>{{ o.processed_text }}</code>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if o.error_message %}
+                    <code>{{ o.error_message }}</code>
+                    {% endif %}
+                </td>
+                <td>{{ o.duration_ms if o.duration_ms else '' }}</td>
             </tr>
             {% endfor %}
         </tbody>

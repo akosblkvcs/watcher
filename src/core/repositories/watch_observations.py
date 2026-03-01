@@ -1,7 +1,3 @@
-"""
-WatchObservation repository.
-"""
-
 from __future__ import annotations
 
 from sqlalchemy import select
@@ -19,12 +15,6 @@ class WatchObservationRepository(RepositoryBase):
 
     def list_recent(self, *, limit: int) -> list[WatchObservation]:
         """Return the most recent observations (newest first)."""
-        stmt = (
-            select(WatchObservation)
-            .order_by(WatchObservation.id.desc())
-            .limit(limit)
-        )
-        rows = self._session.scalars(
-            stmt
-        ).all()
+        stmt = select(WatchObservation).order_by(WatchObservation.id.desc()).limit(limit)
+        rows = self._session.scalars(stmt).all()
         return list(rows)

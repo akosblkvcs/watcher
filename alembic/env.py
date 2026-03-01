@@ -1,27 +1,13 @@
-"""
-Alembic environment configuration file.
-"""
-
-# pylint: disable=no-member,import-error,unused-import
-
-import os
-
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
-from dotenv import load_dotenv
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-
-from core.db.base import Base
+from core.config.settings import settings
 from core.db import models  # type: ignore  # noqa: F401
+from core.db.base import Base
 
-
-load_dotenv()
-
-# this is the Alembic Config object, which provides
+# This is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
@@ -30,16 +16,19 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
+# Add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
-# other values from the config, defined by the needs of env.py,
+# Other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+# Delegate URL configuration to Pydantic.
+config.set_main_option("sqlalchemy.url", settings.sqlalchemy_url)
 
 
 def run_migrations_offline() -> None:
@@ -52,10 +41,7 @@ def run_migrations_offline() -> None:
 
     Calls to context.execute() here emit the given string to the
     script output.
-
     """
-    _set_sqlalchemy_url_from_env()
-
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
@@ -73,10 +59,7 @@ def run_migrations_online() -> None:
 
     In this scenario we need to create an Engine
     and associate a connection with the context.
-
     """
-    _set_sqlalchemy_url_from_env()
-
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
@@ -84,32 +67,10 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
-
-
-def _set_sqlalchemy_url_from_env() -> None:
-    database_url: str | None = os.environ.get("DATABASE_URL")
-
-    if not database_url:
-        raise RuntimeError(
-            "DATABASE_URL is required to run alembic migrations."
-        )
-
-    config.set_main_option(
-        "sqlalchemy.url",
-        _normalize_database_url(database_url)
-    )
-
-
-def _normalize_database_url(url: str) -> str:
-    if url.startswith("postgres://"):
-        return url.replace("postgres://", "postgresql+psycopg://", 1)
-    return url
 
 
 if context.is_offline_mode():

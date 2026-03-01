@@ -1,9 +1,3 @@
-"""
-WatchTarget repository.
-"""
-
-# pylint: disable=import-error
-
 from __future__ import annotations
 
 from sqlalchemy import select

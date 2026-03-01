@@ -3,4 +3,5 @@ services:
     build:
       context: .
       dockerfile: docker/web.Dockerfile
+      target: production
     restart: unless-stopped

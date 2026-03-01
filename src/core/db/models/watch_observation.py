@@ -1,9 +1,3 @@
-"""
-Defines the WatchObservation model for the database.
-"""
-
-# pylint: disable=not-callable,too-few-public-methods
-
 from __future__ import annotations
 
 from datetime import datetime
