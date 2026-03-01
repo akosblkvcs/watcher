@@ -15,6 +15,7 @@ from core.repositories.watch_observations import WatchObservationRepository
 from core.repositories.watch_runs import WatchRunRepository
 from core.repositories.watch_targets import WatchTargetRepository
 from core.services.pipeline import PipelineParams, run_pipeline
+from core.services.diff import is_changed
 
 
 @dataclass(frozen=True)
@@ -60,6 +61,7 @@ class RunWatcherUseCase:
 
         for t in targets:
             started = datetime.now(timezone.utc)
+            prev = t.last_processed_text
 
             try:
                 params = PipelineParams(
@@ -73,24 +75,27 @@ class RunWatcherUseCase:
                 )
                 res = run_pipeline(params=params)
 
+                finished = datetime.now(timezone.utc)
                 duration_ms = int(
                     (datetime.now(timezone.utc) - started).total_seconds()
                     * 1000
                 )
+
+                changed = is_changed(prev, res.processed_text)
 
                 obs = WatchObservation(
                     run_id=run.id,
                     target_id=t.id,
                     raw_text=res.raw_text,
                     processed_text=res.processed_text,
-                    changed=False,
-                    previous_processed_text=t.last_processed_text,
+                    changed=changed,
+                    previous_processed_text=prev,
                     error_message=None,
                     duration_ms=duration_ms,
                 )
                 self._obs_repo.add(obs)
 
-                t.last_run_at = datetime.now(timezone.utc)
+                t.last_run_at = finished
                 t.last_status = "success"
                 t.last_raw_text = res.raw_text
                 t.last_processed_text = res.processed_text
@@ -100,6 +105,7 @@ class RunWatcherUseCase:
                 ok += 1
 
             except Exception as ex:
+                finished = datetime.now(timezone.utc)
                 duration_ms = int(
                     (datetime.now(timezone.utc) - started).total_seconds()
                     * 1000
@@ -111,13 +117,13 @@ class RunWatcherUseCase:
                     raw_text=None,
                     processed_text=None,
                     changed=False,
-                    previous_processed_text=t.last_processed_text,
+                    previous_processed_text=prev,
                     error_message=str(ex),
                     duration_ms=duration_ms,
                 )
                 self._obs_repo.add(obs)
 
-                t.last_run_at = datetime.now(timezone.utc)
+                t.last_run_at = finished
                 t.last_status = "failure"
                 t.last_error_message = str(ex)
                 t.last_duration_ms = duration_ms
