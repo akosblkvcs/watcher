@@ -1,56 +1,47 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Targets</title>
-    <style>
-      table { border-collapse: collapse; width: 100%; }
-      th, td { border: 1px solid #ddd; padding: 8px; vertical-align: top; }
-      th { text-align: left; }
-      code { white-space: pre-wrap; }
-    </style>
-  </head>
-  <body>
+{% extends "base.html" %}
+
+{% block title %}Targets - Watcher{% endblock %}
+
+{% block content %}
     <h1>Watch Targets</h1>
 
     <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>URL</th>
-          <th>Selector</th>
-          <th>Processor</th>
-          <th>Active</th>
-          <th>Last Run</th>
-          <th>Last Status</th>
-          <th>Last Processed</th>
-          <th>Last Error</th>
-          <th>Duration (ms)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for t in targets %}
-        <tr>
-          <td>{{ t.id }}</td>
-          <td>{{ t.name }}</td>
-          <td><a href="{{ t.url }}" target="_blank" rel="noopener">{{ t.url }}</a></td>
-          <td><code>{{ t.selector_type }}: {{ t.selector }}</code></td>
-          <td>
-            <code>{{ t.processor_type }}</code>
-            {% if t.processor_config %}
-              <div><code>{{ t.processor_config }}</code></div>
-            {% endif %}
-          </td>
-          <td>{{ 'yes' if t.active else 'no' }}</td>
-          <td>{{ t.last_run_at or '' }}</td>
-          <td>{{ t.last_status or '' }}</td>
-          <td><code>{{ t.last_processed_text or '' }}</code></td>
-          <td><code>{{ t.last_error_message or '' }}</code></td>
-          <td>{{ t.last_duration_ms or '' }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>URL</th>
+                <th>Selector</th>
+                <th>Processor</th>
+                <th>Active</th>
+                <th>Last Run</th>
+                <th>Last Status</th>
+                <th>Last Processed</th>
+                <th>Last Error</th>
+                <th>Duration (ms)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in targets %}
+            <tr>
+                <td>{{ t.id }}</td>
+                <td>{{ t.name }}</td>
+                <td><a href="{{ t.url }}" target="_blank" rel="noopener">{{ t.url }}</a></td>
+                <td><code>{{ t.selector_type }}: {{ t.selector }}</code></td>
+                <td>
+                    <code>{{ t.processor_type }}</code>
+                    {% if t.processor_config %}
+                    <div><code>{{ t.processor_config }}</code></div>
+                    {% endif %}
+                </td>
+                <td>{{ 'yes' if t.active else 'no' }}</td>
+                <td>{{ t.last_run_at or '' }}</td>
+                <td>{{ t.last_status or '' }}</td>
+                <td><code>{{ t.last_processed_text or '' }}</code></td>
+                <td><code>{{ t.last_error_message or '' }}</code></td>
+                <td>{{ t.last_duration_ms or '' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-  </body>
-</html>
+{% endblock %}
