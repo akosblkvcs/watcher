@@ -1,1 +1,47 @@
-observations
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Observations</title>
+    <style>
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border: 1px solid #ddd; padding: 8px; vertical-align: top; }
+      th { text-align: left; }
+      code { white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <h1>Recent Observations</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Run</th>
+          <th>Target</th>
+          <th>Observed At</th>
+          <th>Changed</th>
+          <th>Previous</th>
+          <th>Processed</th>
+          <th>Error</th>
+          <th>Duration (ms)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in observations %}
+        <tr>
+          <td>{{ o.id }}</td>
+          <td>{{ o.run_id }}</td>
+          <td>{{ o.target_id }}</td>
+          <td>{{ o.observed_at }}</td>
+          <td>{{ 'yes' if o.changed else 'no' }}</td>
+          <td><code>{{ o.previous_processed_text or '' }}</code></td>
+          <td><code>{{ o.processed_text or '' }}</code></td>
+          <td><code>{{ o.error_message or '' }}</code></td>
+          <td>{{ o.duration_ms or '' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
