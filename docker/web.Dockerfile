@@ -1,0 +1,21 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY pyproject.toml README.md alembic.ini /app/
+COPY alembic /app/alembic
+COPY src /app/src
+
+RUN pip install --no-cache-dir -U pip \
+  && pip install --no-cache-dir -e .
+
+EXPOSE 8000
+
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:8000", "web.app:create_app()"]
