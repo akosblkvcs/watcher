@@ -100,7 +100,16 @@ def _set_sqlalchemy_url_from_env() -> None:
             "DATABASE_URL is required to run alembic migrations."
         )
 
-    config.set_main_option("sqlalchemy.url", database_url)
+    config.set_main_option(
+        "sqlalchemy.url",
+        _normalize_database_url(database_url)
+    )
+
+
+def _normalize_database_url(url: str) -> str:
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql+psycopg://", 1)
+    return url
 
 
 if context.is_offline_mode():
