@@ -20,12 +20,25 @@ def min_value(values: list[str], config: dict[str, Any]) -> str:
 
     nums: list[float] = []
     for v in values:
-        text = v.replace(".", "").replace(",", ".") if is_comma else v.replace(",", "")
+        # 1. Remove all whitespace
+        clean_v = re.sub(r"\s+", "", v)
 
+        # 2. Normalize based on separator config
+        if is_comma:
+            # Assumes dot is thousands separator: 1.234,56 -> 1234.56
+            text = clean_v.replace(".", "").replace(",", ".")
+        else:
+            # Assumes comma is thousands separator: 1,234.56 -> 1234.56
+            text = clean_v.replace(",", "")
+
+        # 3. Extract the numeric component
         if match := re.search(r"\d+(?:\.\d+)?", text):
             nums.append(float(match.group(0)))
 
-    return str(min(nums)) if nums else empty
+    if not nums:
+        return empty
+
+    return f"{min(nums):g}"
 
 
 PROCESSORS: dict[str, Processor] = {
