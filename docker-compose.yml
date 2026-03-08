@@ -2,8 +2,8 @@ name: watcher
 
 services:
   db:
-    container_name: watcher-postgres
     image: postgres:16
+    container_name: watcher-db
     environment:
       POSTGRES_DB: watcher
       POSTGRES_USER: postgres
@@ -18,23 +18,22 @@ services:
       timeout: 5s
       retries: 20
 
-  app:
+  web:
     container_name: watcher-web
+    image: watcher-web:latest
     build:
-      context: ../
-      dockerfile: docker/web.Dockerfile
+      context: .
       target: development
-    volumes:
-      - ../:/app
-      - /app/src/__pycache__
     environment:
-      - FLASK_DEBUG=1
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/watcher
+      FLASK_DEBUG: "1"
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/watcher
     ports:
       - "8000:8000"
-    command: >
-      sh -c "alembic upgrade head &&
-            flask --app 'web.app:create_app()' run --host=0.0.0.0 --port=8000 --reload"
+    volumes:
+      - ./src:/app/src
+      - ./alembic:/app/alembic
+      - ./alembic.ini:/app/alembic.ini
+      - ./pyproject.toml:/app/pyproject.toml
     depends_on:
       db:
         condition: service_healthy
