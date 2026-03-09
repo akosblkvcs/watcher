@@ -10,7 +10,6 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
   "flask>=3.0",
-  "gunicorn>=21.2",
   "sqlalchemy>=2.0",
   "psycopg[binary]>=3.1",
   "alembic>=1.13",
@@ -22,8 +21,11 @@ dependencies = [
   "cssselect>=1.2.0",
 ]
 
-[project.optional-dependencies]
-development = [
+[dependency-groups]
+prod = [
+  "gunicorn>=21.2",
+]
+dev = [
   "pytest>=8.0",
   "ruff>=0.6.0",
   "types-lxml>=2026.2.16",
@@ -47,32 +49,30 @@ line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]
-# Expanded rule set
 select = [
-  "E",   # pycodestyle errors
-  "W",   # pycodestyle warnings
-  "F",   # pyflakes
-  "I",   # isort (import sorting)
-  "B",   # flake8-bugbear
-  "UP",  # pyupgrade
-  "N",   # pep8-naming
-  "D",   # pydocstyle
-  "A",   # flake8-builtins
-  "C4",  # flake8-comprehensions
-  "PL",  # Pylint rules
+  "E",
+  "W",
+  "F",
+  "I",
+  "B",
+  "UP",
+  "N",
+  "D",
+  "A",
+  "C4",
+  "PL",
 ]
 ignore = [
-  "D100",  # Missing docstring in public module (often overkill)
-  "D104",  # Missing docstring in public package
+  "D100",
+  "D104",
 ]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
-# Silence specific errors in migrations
-"src/migrations/versions/*.py" = [
-  "E501",  # Line length (Alembic generates long lines)
-  "N806",  # Variable name in function (Alembic uses 'op')
-  "D103",  # Missing docstring in function
+"alembic/versions/**/*.py" = [
+  "E501",
+  "N806",
+  "D103",
 ]
