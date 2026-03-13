@@ -45,11 +45,8 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
-[tool.pyright]
-reportUnusedFunction = false
-
 [tool.ruff]
-line-length = 99
+line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]

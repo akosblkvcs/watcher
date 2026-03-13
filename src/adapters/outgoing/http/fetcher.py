@@ -1,24 +1,18 @@
+"""HTTP client for fetching target web pages."""
+
 from __future__ import annotations
 
 import sys
-from dataclasses import dataclass
 
 import httpx
 
+from application.ports import FetchResult
 from config import settings
 
-if sys.platform.startswith("win"):
+if settings.env == "development" and sys.platform.startswith("win"):
     import truststore
 
     truststore.inject_into_ssl()
-
-
-@dataclass(frozen=True)
-class FetchResult:
-    """HTTP fetch result class."""
-
-    status_code: int
-    text: str
 
 
 def fetch_html(url: str) -> FetchResult:

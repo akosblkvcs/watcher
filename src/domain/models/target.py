@@ -6,6 +6,7 @@ from typing import Any
 from sqlalchemy import JSON, Boolean, DateTime, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
+from domain.enums import ProcessorType, SelectorType
 from domain.models.base import Base
 
 
@@ -20,14 +21,14 @@ class Target(Base):
 
     url: Mapped[str] = mapped_column(Text, nullable=False)
 
-    selector_type: Mapped[str] = mapped_column(
+    selector_type: Mapped[SelectorType] = mapped_column(
         String(10),
         nullable=False,
         server_default="css",
     )
     selector: Mapped[str] = mapped_column(Text, nullable=False)
 
-    processor_type: Mapped[str] = mapped_column(
+    processor_type: Mapped[ProcessorType] = mapped_column(
         String(50),
         nullable=False,
         server_default="raw_text",

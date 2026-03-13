@@ -1,10 +1,12 @@
+"""Fetch -> extract -> process orchestration pipeline."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from adapters.outgoing.http.extractor import extract_texts_from_html
-from adapters.outgoing.http.fetcher import fetch_html
+from application.ports import Extractor, Fetcher
 from application.processors import PROCESSORS
+from domain.enums import ProcessorType, SelectorType
 
 
 @dataclass(frozen=True)
@@ -12,9 +14,9 @@ class PipelineParams:
     """Pipeline input parameters."""
 
     url: str
-    selector_type: str
+    selector_type: SelectorType
     selector: str
-    processor_type: str
+    processor_type: ProcessorType
     processor_config: dict[str, object] | None
 
 
@@ -26,22 +28,30 @@ class PipelineResult:
     processed_text: str
 
 
-def run_pipeline(*, params: PipelineParams) -> PipelineResult:
-    """Run fetch -> extract -> process pipeline and return raw and processed text."""
-    fetch = fetch_html(params.url)
+class Pipeline:
+    """Orchestrates fetch -> extract -> process using injected adapters."""
 
-    extracted = extract_texts_from_html(
-        fetch.text,
-        selector_type=params.selector_type,
-        selector=params.selector,
-    )
-    raw = ", ".join(extracted.texts)
+    def __init__(self, fetcher: Fetcher, extractor: Extractor) -> None:
+        """Create with outbound port implementations."""
+        self._fetcher = fetcher
+        self._extractor = extractor
 
-    processor = PROCESSORS.get(params.processor_type)
+    def execute(self, params: PipelineParams) -> PipelineResult:
+        """Run the full pipeline and return raw and processed text."""
+        fetch = self._fetcher(params.url)
 
-    if processor is None:
-        raise ValueError(f"Unknown processor_type: {params.processor_type}")
+        extracted = self._extractor(
+            fetch.text,
+            selector_type=params.selector_type,
+            selector=params.selector,
+        )
+        raw = ", ".join(extracted.texts)
 
-    processed = processor(extracted.texts, params.processor_config or {})
+        processor = PROCESSORS.get(params.processor_type)
 
-    return PipelineResult(raw_text=raw, processed_text=processed)
+        if processor is None:
+            raise ValueError(f"Unknown processor_type: {params.processor_type}")
+
+        processed = processor(extracted.texts, params.processor_config or {})
+
+        return PipelineResult(raw_text=raw, processed_text=processed)

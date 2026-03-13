@@ -1,30 +1,27 @@
+"""HTML text extraction via CSS and XPath selectors."""
+
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Any, cast
 
 from lxml import html
 
-
-@dataclass(frozen=True)
-class ExtractResult:
-    """Container for extracted texts."""
-
-    texts: list[str]
+from application.ports import ExtractResult
+from domain.enums import SelectorType
 
 
 def extract_texts_from_html(
     html_text: str,
-    selector_type: str,
+    selector_type: SelectorType,
     selector: str,
 ) -> ExtractResult:
     """Extract node texts from HTML using XPath or CSS selectors."""
     doc = html.fromstring(html_text)
     nodes: list[Any] = []
 
-    if selector_type == "css":
+    if selector_type == SelectorType.CSS:
         nodes = doc.cssselect(selector)
-    elif selector_type == "xpath":
+    elif selector_type == SelectorType.XPATH:
         nodes_obj = doc.xpath(selector)
         if isinstance(nodes_obj, list):
             nodes = cast(list[Any], nodes_obj)

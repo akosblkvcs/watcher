@@ -12,7 +12,3 @@ class RepositoryBase:
     def __init__(self, session: Session | scoped_session[Any]) -> None:
         """Create repository using the given SQLAlchemy session."""
         self._session = session
-
-    def flush(self) -> None:
-        """Flush pending changes so ids are available."""
-        self._session.flush()

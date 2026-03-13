@@ -1,3 +1,5 @@
+"""Unit of Work transactional boundary."""
+
 from __future__ import annotations
 
 from contextlib import AbstractContextManager
@@ -39,9 +41,17 @@ class UnitOfWork(AbstractContextManager["UnitOfWork"]):
     ) -> None:
         """Commit on success, rollback on failure."""
         if exc_type is None:
-            self._session.commit()
+            try:
+                self._session.commit()
+            except Exception:
+                self._session.rollback()
+                raise
         else:
             self._session.rollback()
+
+    def flush(self) -> None:
+        """Flush pending changes so generated ids are available without committing."""
+        self._session.flush()
 
     def commit(self) -> None:
         """Explicitly commit the current transaction."""

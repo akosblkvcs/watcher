@@ -1,3 +1,5 @@
+"""Change detection between observation values."""
+
 from __future__ import annotations
 
 

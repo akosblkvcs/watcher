@@ -1,4 +1,8 @@
+"""Domain exception hierarchy."""
+
 from __future__ import annotations
+
+from domain.enums import ProcessorType
 
 
 class AppError(Exception):
@@ -16,7 +20,7 @@ class ExtractionError(AppError):
 class ProcessorError(AppError):
     """Raised when a text processor encounters an error."""
 
-    def __init__(self, processor_type: str, detail: str) -> None:
+    def __init__(self, processor_type: ProcessorType, detail: str) -> None:
         """Create with the processor name and failure detail."""
         self.processor_type = processor_type
         super().__init__(f"Processor '{processor_type}' failed: {detail}")
