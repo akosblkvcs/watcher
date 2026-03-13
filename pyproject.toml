@@ -10,6 +10,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
   "flask>=3.0",
+  "flask-sqlalchemy>=3.1",
   "sqlalchemy>=2.0",
   "psycopg[binary]>=3.1",
   "alembic>=1.13",
@@ -44,8 +45,11 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
+[tool.pyright]
+reportUnusedFunction = false
+
 [tool.ruff]
-line-length = 100
+line-length = 99
 target-version = "py312"
 
 [tool.ruff.lint]

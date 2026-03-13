@@ -19,8 +19,8 @@ services:
       timeout: 5s
       retries: 20
 
-  web:
-    container_name: watcher-web
+  app:
+    container_name: watcher-app
     build:
       context: .
       target: development
