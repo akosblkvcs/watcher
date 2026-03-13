@@ -69,4 +69,4 @@ CMD exec gunicorn \
     -w "${WEB_CONCURRENCY:-2}" \
     -b 0.0.0.0:8000 \
     --access-logfile - \
-    "web.app:create_app()"
+    "app:create_app()"

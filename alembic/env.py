@@ -3,9 +3,8 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-from core.config.settings import settings
-from core.db import models  # type: ignore  # noqa: F401
-from core.db.base import Base
+from config import settings
+from domain.models.base import Base
 
 # This is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -28,7 +27,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 # Delegate URL configuration to Pydantic.
-config.set_main_option("sqlalchemy.url", settings.sqlalchemy_url)
+config.set_main_option("sqlalchemy.url", str(settings.database_url))
 
 
 def run_migrations_offline() -> None:
