@@ -1,6 +1,15 @@
+"""Domain vocabulary as enumeration types."""
+
 from __future__ import annotations
 
 import enum
+
+
+class ProcessorType(enum.StrEnum):
+    """Supported text processors."""
+
+    RAW_TEXT = "raw_text"
+    MIN_VALUE = "min_value"
 
 
 class SelectorType(enum.StrEnum):
@@ -15,6 +24,7 @@ class RunStatus(enum.StrEnum):
 
     SUCCESS = "success"
     PARTIAL = "partial"
+    FAILURE = "failure"
 
 
 class TargetStatus(enum.StrEnum):

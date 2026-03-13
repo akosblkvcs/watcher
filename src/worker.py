@@ -14,16 +14,19 @@ def main() -> int:
     """Run all active targets once and exit."""
     session = create_session()
 
-    with UnitOfWork(session) as uow:
-        runner = create_runner(uow.session)
-        result = runner.execute()
+    try:
+        with UnitOfWork(session) as uow:
+            runner = create_runner(uow)
+            result = runner.execute()
 
-    print(
-        f"run_id={result.run_id} total={result.targets_total} "
-        f"ok={result.targets_succeeded} fail={result.targets_failed}"
-    )
+        print(
+            f"run_id={result.run_id} total={result.targets_total} "
+            f"ok={result.targets_succeeded} fail={result.targets_failed}"
+        )
 
-    return 0
+        return 0
+    finally:
+        session.close()
 
 
 if __name__ == "__main__":

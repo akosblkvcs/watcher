@@ -7,6 +7,7 @@ abstractions, keeping it decoupled from any specific persistence adapter.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Protocol
 
 from domain.models.observation import Observation
@@ -17,7 +18,7 @@ from domain.models.target import Target
 class TargetRepo(Protocol):
     """Port for target persistence."""
 
-    def list_active(self) -> list[Target]:
+    def list_active(self) -> Sequence[Target]:
         """Return all active targets."""
         ...
 
@@ -27,10 +28,6 @@ class TargetRepo(Protocol):
 
     def add(self, target: Target) -> None:
         """Stage a target for persistence."""
-        ...
-
-    def flush(self) -> None:
-        """Flush pending changes so generated ids are available."""
         ...
 
 
@@ -45,10 +42,6 @@ class RunRepo(Protocol):
         """Return a run by id, or None if missing."""
         ...
 
-    def flush(self) -> None:
-        """Flush pending changes so generated ids are available."""
-        ...
-
 
 class ObservationRepo(Protocol):
     """Port for observation persistence."""
@@ -57,10 +50,6 @@ class ObservationRepo(Protocol):
         """Stage an observation for persistence."""
         ...
 
-    def list_recent(self, *, limit: int) -> list[Observation]:
+    def list_recent(self, *, limit: int) -> Sequence[Observation]:
         """Return the most recent observations (newest first)."""
-        ...
-
-    def flush(self) -> None:
-        """Flush pending changes so generated ids are available."""
         ...

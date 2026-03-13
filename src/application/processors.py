@@ -1,8 +1,12 @@
+"""Text processors that transform extracted content."""
+
 from __future__ import annotations
 
 import re
 from collections.abc import Callable
 from typing import Any
+
+from domain.enums import ProcessorType
 
 Processor = Callable[[list[str], dict[str, Any]], str]
 """Processor signature: (values, config) -> processed string."""
@@ -41,7 +45,7 @@ def min_value(values: list[str], config: dict[str, Any]) -> str:
     return f"{min(nums):g}"
 
 
-PROCESSORS: dict[str, Processor] = {
-    "raw_text": raw_text,
-    "min_value": min_value,
+PROCESSORS: dict[ProcessorType, Processor] = {
+    ProcessorType.RAW_TEXT: raw_text,
+    ProcessorType.MIN_VALUE: min_value,
 }
