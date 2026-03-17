@@ -13,32 +13,6 @@ services:
       - "5432:5432"
     volumes:
       - watcher_pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d watcher"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-
-  app:
-    container_name: watcher-app
-    build:
-      context: .
-      target: development
-    restart: unless-stopped
-    environment:
-      DATABASE_URL: postgresql+psycopg://postgres:postgres@db:5432/watcher
-      FLASK_DEBUG: "1"
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./src:/app/src
-      - ./alembic:/app/alembic
-      - ./alembic.ini:/app/alembic.ini
-      - ./pyproject.toml:/app/pyproject.toml
-      - ./uv.lock:/app/uv.lock
-    depends_on:
-      db:
-        condition: service_healthy
 
 volumes:
   watcher_pgdata:

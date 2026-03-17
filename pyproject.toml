@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "watcher"
 version = "0.1.0"
-description = "Lightweight web watcher service with a dashboard and persistent storage."
+description = "Web watcher service with a dashboard and persistent storage."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
   "flask>=3.0",
   "flask-sqlalchemy>=3.1",
@@ -47,7 +47,7 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py314"
 
 [tool.ruff.lint]
 select = [

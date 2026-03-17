@@ -1,3 +1,3 @@
 # watcher
 
-Lightweight web watcher service with a dashboard and persistent storage.
+Web watcher service with a dashboard and persistent storage.
