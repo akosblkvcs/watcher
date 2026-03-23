@@ -12,13 +12,17 @@ set +a
 
 echo "Starting infrastructure..."
 docker compose up -d
-trap 'docker compose down' EXIT
+
+echo "Waiting for PostgreSQL..."
+until docker compose exec -T db pg_isready -U postgres -d watcher -q 2>/dev/null; do
+  sleep 1
+done
 
 echo "Syncing dependencies..."
-uv sync
+uv sync --locked
 
 echo "Running migrations..."
 .venv/bin/alembic upgrade head
 
 echo "Starting Flask dev server..."
-.venv/bin/flask --app 'app:create_app()' run --host=0.0.0.0 --port=${FLASK_PORT:-8000}
+exec .venv/bin/flask --app 'app:create_app()' run --host=127.0.0.1 --port="${FLASK_PORT:-8000}"
