@@ -14,7 +14,7 @@ echo "Starting infrastructure..."
 docker compose up -d
 
 echo "Waiting for PostgreSQL..."
-until docker compose exec -T db pg_isready -U postgres -d watcher -q 2>/dev/null; do
+until docker compose exec -T postgres pg_isready -U postgres -d watcher -q 2>/dev/null; do
   sleep 1
 done
 
