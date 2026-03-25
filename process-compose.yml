@@ -1,0 +1,43 @@
+version: "0.5"
+ordered_shutdown: true
+
+processes:
+  infra:
+    description: Docker Compose infrastructure
+    command: docker compose up
+    readiness_probe:
+      exec:
+        command: docker compose exec postgres pg_isready -h 127.0.0.1 -p 5432 -U postgres
+      initial_delay_seconds: 2
+      period_seconds: 2
+      failure_threshold: 10
+    shutdown:
+      command: docker compose down
+      timeout_seconds: 20
+    log_location: ./.logs/infra.log
+
+  deps:
+    description: Sync Python dependencies
+    command: uv sync --locked
+    log_location: ./.logs/deps.log
+
+  migrate:
+    description: Run Alembic migrations
+    command: uv run alembic upgrade head
+    depends_on:
+      infra:
+        condition: process_healthy
+      deps:
+        condition: process_completed_successfully
+    log_location: ./.logs/migrate.log
+
+  watcher:
+    description: Flask dev server
+    command: uv run flask --app "app:create_app()" run --host=127.0.0.1 --port=${FLASK_PORT:-8000}
+    depends_on:
+      migrate:
+        condition: process_completed_successfully
+    availability:
+      exit_on_end: true
+      exit_on_skipped: true
+    log_location: ./.logs/watcher.log
