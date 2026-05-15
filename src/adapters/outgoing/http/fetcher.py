@@ -28,4 +28,5 @@ def fetch_html(url: str) -> FetchResult:
     ) as client:
         resp = client.get(url)
         resp.raise_for_status()
+
         return FetchResult(status_code=resp.status_code, text=resp.text)

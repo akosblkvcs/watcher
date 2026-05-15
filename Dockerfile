@@ -52,13 +52,16 @@ EXPOSE 8000
 
 STOPSIGNAL SIGTERM
 
-CMD ["gunicorn", \
-     "--no-control-socket", \
-     "--preload", \
-     "-w", "2", \
-     "-b", "0.0.0.0:8000", \
-     "--access-logfile", "-", \
-     "--error-logfile", "-", \
-     "--max-requests", "1000", \
-     "--max-requests-jitter", "100", \
-     "watcher:create_app()"]
+CMD ["sh", "-c", "\
+     alembic upgrade head && \
+     exec gunicorn \
+         --no-control-socket \
+         --preload \
+         -w 2 \
+         -b 0.0.0.0:8000 \
+         --access-logfile - \
+         --error-logfile - \
+         --max-requests 1000 \
+         --max-requests-jitter 100 \
+         'watcher:create_app()' \
+"]

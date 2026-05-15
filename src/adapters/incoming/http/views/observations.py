@@ -27,6 +27,7 @@ class ObservationListView(MethodView):
         """Render the most recent observations page."""
         repo = self._repo_factory(db.session)
         items = repo.list_recent(limit=10)
+
         return render_template("observations.html", observations=items)
 
 
@@ -40,4 +41,5 @@ def create_blueprint(repo_factory: ObservationRepoFactory) -> Blueprint:
             repo_factory=repo_factory,
         ),
     )
+
     return bp

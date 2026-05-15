@@ -89,9 +89,7 @@ class Runner:
                 else:
                     fail += 1
 
-            result = self._build_result(
-                run_id=run.id, targets_total=len(targets), ok=ok, fail=fail
-            )
+            result = self._build_result(run_id=run.id, targets_total=len(targets), ok=ok, fail=fail)
 
             return result
 

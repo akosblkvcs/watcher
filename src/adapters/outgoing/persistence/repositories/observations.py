@@ -18,4 +18,5 @@ class ObservationRepository(RepositoryBase):
     def list_recent(self, *, limit: int) -> Sequence[Observation]:
         """Return the most recent observations (newest first)."""
         stmt = select(Observation).order_by(Observation.id.desc()).limit(limit)
+
         return self._session.scalars(stmt).all()

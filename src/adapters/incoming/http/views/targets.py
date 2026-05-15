@@ -27,6 +27,7 @@ class TargetListView(MethodView):
         """Render the active targets page."""
         repo = self._repo_factory(db.session)
         items = repo.list_active()
+
         return render_template("targets.html", targets=items)
 
 
@@ -40,4 +41,5 @@ def create_blueprint(repo_factory: TargetRepoFactory) -> Blueprint:
             repo_factory=repo_factory,
         ),
     )
+
     return bp

@@ -9,4 +9,5 @@ def is_changed(previous: str | None, current: str | None) -> bool:
         return False
     if previous is None or current is None:
         return True
+
     return previous.strip() != current.strip()

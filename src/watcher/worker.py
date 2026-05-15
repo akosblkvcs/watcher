@@ -1,4 +1,4 @@
-"""Worker entry point — executes a single run.
+"""Worker entry point - executes a single run.
 
 Usage:
     python -m watcher.worker

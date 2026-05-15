@@ -24,6 +24,7 @@ def register_error_handlers(app: Flask) -> None:
             request.method,
             error,
         )
+
         return render_template("errors/404.html"), 404
 
     @app.errorhandler(500)
@@ -34,6 +35,7 @@ def register_error_handlers(app: Flask) -> None:
             request.method,
             exc_info=error,
         )
+
         return render_template("errors/500.html"), 500
 
     @app.errorhandler(TargetNotFoundError)
@@ -44,6 +46,7 @@ def register_error_handlers(app: Flask) -> None:
             request.method,
             error,
         )
+
         return render_template("errors/404.html"), 404
 
     @app.errorhandler(AppError)
@@ -54,4 +57,5 @@ def register_error_handlers(app: Flask) -> None:
             request.method,
             exc_info=error,
         )
+
         return render_template("errors/500.html"), 500
