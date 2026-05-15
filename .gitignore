@@ -1,29 +1,22 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-.venv/
-
-# Packaging
-dist/
-build/
-*.egg-info/
-
-# Tooling
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+# OS / IDE
+.vscode/
+.DS_Store
 
 # Environment
 .env
 .env.*
+!.env.example
 
-# OS / IDE
-.DS_Store
-.idea/
-.vscode/
+# Packaging
+*.egg-info/
+
+# Python
+.venv/
+__pycache__/
+
+# Tooling
+.ruff_cache/
 
 # Logs
-.logs/
+logs/*
+!logs/.gitkeep

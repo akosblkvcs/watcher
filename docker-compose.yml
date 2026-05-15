@@ -12,7 +12,13 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - watcher-pgdata:/var/lib/postgresql
+      - pg:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "watcher"]
+      interval: 60s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
 
 volumes:
-  watcher-pgdata:
+  pg:

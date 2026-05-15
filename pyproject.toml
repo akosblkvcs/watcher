@@ -35,6 +35,7 @@ dev = [
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+py-modules = ["app", "bootstrap", "config", "worker"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

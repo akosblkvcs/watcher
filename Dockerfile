@@ -31,23 +31,36 @@ FROM python:3.14-slim AS production
 
 WORKDIR /app
 
-ENV PYTHONUNBUFFERED=1 \
-    PATH="/app/.venv/bin:$PATH" \
-    PYTHONPATH=/app/src
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/app/.venv/bin:$PATH"
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends wget \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN addgroup --system appgroup \
     && adduser --system --ingroup appgroup appuser
 
 COPY --from=builder --chown=appuser:appgroup /app/.venv /app/.venv
-COPY --from=builder --chown=appuser:appgroup /app/src /app/src
 COPY --from=builder --chown=appuser:appgroup /app/alembic /app/alembic
 COPY --from=builder --chown=appuser:appgroup /app/alembic.ini /app/alembic.ini
+COPY --from=builder --chown=appuser:appgroup /app/src/templates /app/templates
+COPY --from=builder --chown=appuser:appgroup /app/src/static /app/static
 
 USER appuser
 
 EXPOSE 8000
 
-HEALTHCHECK --interval=5m --timeout=5s --start-period=20s --retries=3 \
-    CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=2)"]
+STOPSIGNAL SIGTERM
 
-CMD ["python", "-m", "gunicorn", "--no-control-socket", "-w", "2", "-b", "0.0.0.0:8000", "--access-logfile", "-", "app:create_app()"]
+CMD ["gunicorn", \
+     "--no-control-socket", \
+     "--preload", \
+     "-w", "2", \
+     "-b", "0.0.0.0:8000", \
+     "--access-logfile", "-", \
+     "--error-logfile", "-", \
+     "--max-requests", "1000", \
+     "--max-requests-jitter", "100", \
+     "app:create_app()"]

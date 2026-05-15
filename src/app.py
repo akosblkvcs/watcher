@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from flask import Flask
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -9,9 +11,18 @@ from adapters.incoming.http.views import register_views
 from config import settings
 
 
+def _asset_dirs() -> tuple[str, str]:
+    here = Path(__file__).resolve().parent
+    if (here / "templates").is_dir():
+        return str(here / "templates"), str(here / "static")
+
+    return "/app/templates", "/app/static"
+
+
 def create_app() -> Flask:
     """Create and configure the Flask application."""
-    app = Flask(__name__)
+    template_folder, static_folder = _asset_dirs()
+    app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
     # --- Configuration ---
     app.config["SQLALCHEMY_DATABASE_URI"] = str(settings.database_url)
