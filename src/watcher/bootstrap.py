@@ -20,7 +20,7 @@ from adapters.outgoing.persistence.repositories.targets import TargetRepository
 from adapters.outgoing.persistence.uow import UnitOfWork
 from application.pipeline import Pipeline
 from application.runner import Runner
-from config import settings
+from watcher.config import settings
 
 
 @lru_cache(maxsize=1)
@@ -43,6 +43,7 @@ def create_session() -> Session:
 def create_runner(uow: UnitOfWork) -> Runner:
     """Wire up a Runner with all concrete repositories."""
     pipeline = Pipeline(fetcher=fetch_html, extractor=extract_texts_from_html)
+
     return Runner(
         target_repo=TargetRepository(uow.session),
         run_repo=RunRepository(uow.session),

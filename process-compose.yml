@@ -22,7 +22,7 @@ processes:
     command: |
       uv sync --locked &&
       uv run alembic upgrade head &&
-      uv run flask --app "app:create_app()" run --host=127.0.0.1 --port=8000
+      uv run flask --app "watcher:create_app()" run --host=127.0.0.1 --port=8000
     ready_log_line: "Running on http://127.0.0.1"
     log_location: ./logs/web.log
     availability:
@@ -36,7 +36,7 @@ processes:
 
   worker:
     disabled: true
-    command: uv run python -m worker
+    command: uv run python -m watcher.worker
     log_location: ./logs/worker.log
     availability:
       restart: "no"
