@@ -45,8 +45,6 @@ RUN addgroup --system appgroup \
 COPY --from=builder --chown=appuser:appgroup /app/.venv /app/.venv
 COPY --from=builder --chown=appuser:appgroup /app/alembic /app/alembic
 COPY --from=builder --chown=appuser:appgroup /app/alembic.ini /app/alembic.ini
-COPY --from=builder --chown=appuser:appgroup /app/src/templates /app/templates
-COPY --from=builder --chown=appuser:appgroup /app/src/static /app/static
 
 USER appuser
 
@@ -63,4 +61,4 @@ CMD ["gunicorn", \
      "--error-logfile", "-", \
      "--max-requests", "1000", \
      "--max-requests-jitter", "100", \
-     "app:create_app()"]
+     "watcher:create_app()"]

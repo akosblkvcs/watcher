@@ -35,13 +35,12 @@ dev = [
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = ["app", "bootstrap", "config", "worker"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-"*" = ["templates/**/*.html", "static/**/*"]
+watcher = ["templates/*.html", "templates/**/*.html", "static/*", "static/**/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

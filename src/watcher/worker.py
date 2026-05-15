@@ -1,13 +1,13 @@
 """Worker entry point — executes a single run.
 
 Usage:
-    python -m worker
+    python -m watcher.worker
 """
 
 from __future__ import annotations
 
 from adapters.outgoing.persistence.uow import UnitOfWork
-from bootstrap import create_runner, create_session
+from watcher.bootstrap import create_runner, create_session
 
 
 def main() -> int:

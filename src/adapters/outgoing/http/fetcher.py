@@ -7,7 +7,7 @@ import sys
 import httpx
 
 from application.ports import FetchResult
-from config import settings
+from watcher.config import settings
 
 if settings.env == "development" and sys.platform.startswith("win"):
     import truststore
