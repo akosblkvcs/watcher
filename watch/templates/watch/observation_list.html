@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Observations - Watcher{% endblock %}
+
+{% block content %}
+    <h1>Recent Observations</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Run</th>
+                <th>Target</th>
+                <th>Observed At</th>
+                <th>Changed</th>
+                <th>Previous</th>
+                <th>Processed</th>
+                <th>Error</th>
+                <th>Duration (ms)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for o in observations %}
+            <tr>
+                <td>{{ o.id }}</td>
+                <td>{{ o.run_id }}</td>
+                <td>{{ o.target.name }}</td>
+                <td>{{ o.observed_at }}</td>
+                <td>{{ o.changed|yesno }}</td>
+                <td>
+                    {% if o.previous_processed_text %}
+                    <code>{{ o.previous_processed_text }}</code>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if o.processed_text %}
+                    <code>{{ o.processed_text }}</code>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if o.error_message %}
+                    <code>{{ o.error_message }}</code>
+                    {% endif %}
+                </td>
+                <td>{{ o.duration_ms|default_if_none:'' }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="9">No observations yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %}
+    <p>
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+    </p>
+    {% endif %}
+{% endblock %}

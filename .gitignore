@@ -7,15 +7,12 @@
 .env.*
 !.env.example
 
-# Packaging
-*.egg-info/
-
 # Python
 .venv/
 __pycache__/
-
-# Tooling
 .ruff_cache/
+*.egg-info/
+staticfiles/
 
 # Logs
 logs/*

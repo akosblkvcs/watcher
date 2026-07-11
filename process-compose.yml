@@ -21,9 +21,9 @@ processes:
     disabled: false
     command: |
       uv sync --locked &&
-      uv run alembic upgrade head &&
-      uv run flask --app "watcher:create_app()" run --host=127.0.0.1 --port=8000
-    ready_log_line: "Running on http://127.0.0.1"
+      uv run python manage.py migrate &&
+      uv run python manage.py runserver 127.0.0.1:8000
+    ready_log_line: "Watching for file changes with StatReloader"
     log_location: ./logs/web.log
     availability:
       exit_on_end: true
@@ -36,7 +36,7 @@ processes:
 
   worker:
     disabled: true
-    command: uv run python -m watcher.worker
+    command: uv run python manage.py run_watch
     log_location: ./logs/worker.log
     availability:
       restart: "no"
