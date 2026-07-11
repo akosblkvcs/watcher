@@ -12,19 +12,19 @@ COPY --from=ghcr.io/astral-sh/uv:0.10.9 /uv /uvx /bin/
 # Builder stage for production
 FROM base AS builder
 
-COPY pyproject.toml uv.lock README.md ./
+COPY pyproject.toml uv.lock ./
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-dev --no-editable --no-install-project --group prod
+    uv sync --locked --no-dev --compile-bytecode --group prod
 
-COPY src ./src
-COPY alembic ./alembic
-COPY alembic.ini ./
+COPY manage.py ./
+COPY config ./config
+COPY watch ./watch
+COPY templates ./templates
+COPY static ./static
 
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-dev --no-editable --compile-bytecode --group prod
-
-RUN /app/.venv/bin/python -c "import gunicorn; print(gunicorn.__version__)"
+RUN DJANGO_SETTINGS_MODULE=config.settings_build \
+    /app/.venv/bin/python manage.py collectstatic --noinput
 
 # Production stage
 FROM python:3.14-slim AS production
@@ -33,7 +33,8 @@ WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PATH="/app/.venv/bin:$PATH"
+    PATH="/app/.venv/bin:$PATH" \
+    DJANGO_SETTINGS_MODULE=config.settings
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends wget \
@@ -43,8 +44,11 @@ RUN addgroup --system appgroup \
     && adduser --system --ingroup appgroup appuser
 
 COPY --from=builder --chown=appuser:appgroup /app/.venv /app/.venv
-COPY --from=builder --chown=appuser:appgroup /app/alembic /app/alembic
-COPY --from=builder --chown=appuser:appgroup /app/alembic.ini /app/alembic.ini
+COPY --from=builder --chown=appuser:appgroup /app/manage.py /app/manage.py
+COPY --from=builder --chown=appuser:appgroup /app/config /app/config
+COPY --from=builder --chown=appuser:appgroup /app/watch /app/watch
+COPY --from=builder --chown=appuser:appgroup /app/templates /app/templates
+COPY --from=builder --chown=appuser:appgroup /app/staticfiles /app/staticfiles
 
 USER appuser
 
@@ -53,15 +57,17 @@ EXPOSE 8000
 STOPSIGNAL SIGTERM
 
 CMD ["sh", "-c", "\
-     alembic upgrade head && \
+     python manage.py migrate --noinput && \
      exec gunicorn \
          --no-control-socket \
          --preload \
          -w 2 \
+         --worker-class gthread \
+         --threads 4 \
          -b 0.0.0.0:8000 \
          --access-logfile - \
          --error-logfile - \
          --max-requests 1000 \
          --max-requests-jitter 100 \
-         'watcher:create_app()' \
+         config.wsgi:application \
 "]

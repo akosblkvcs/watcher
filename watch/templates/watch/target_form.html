@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}New Target - Watcher{% endblock %}
+
+{% block content %}
+    <h1>New Watch Target</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <p>
+            <button type="submit">Create target</button>
+            <a href="{% url 'watch:target-list' %}">Cancel</a>
+        </p>
+    </form>
+{% endblock %}
