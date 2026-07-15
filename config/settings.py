@@ -1,7 +1,4 @@
-"""Django settings for the watcher project.
-
-All configuration comes from environment variables and is required.
-"""
+"""Django settings for the watcher project."""
 
 from __future__ import annotations
 
@@ -171,6 +168,8 @@ LOGGING: dict[str, Any] = {
 
 # Watcher
 
-WATCHER_HTTP_TIMEOUT_SECONDS = _env_int("HTTP_TIMEOUT_SECONDS")
-WATCHER_HTTP_RETRIES = _env_int("HTTP_RETRIES")
-WATCHER_USER_AGENT = _env_str("USER_AGENT")
+HTTP_TIMEOUT_SECONDS = _env_int("HTTP_TIMEOUT_SECONDS")
+HTTP_RETRIES = _env_int("HTTP_RETRIES")
+USER_AGENT = _env_str("USER_AGENT")
+
+BRIGHTDATA_API_KEY = os.environ.get("BRIGHTDATA_API_KEY", "")

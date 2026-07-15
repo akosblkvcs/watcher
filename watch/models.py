@@ -1,9 +1,4 @@
-"""Domain models: a Target is watched; each Run produces Observations.
-
-Fields carry explicit type parameters (``Field[set_type, get_type]``) so
-type checkers without the django-stubs mypy plugin (e.g. Pyright) can
-infer attribute types.
-"""
+"""Domain models: a Target is watched; each Run produces Observations."""
 
 from __future__ import annotations
 
@@ -14,7 +9,7 @@ from django.db import models
 
 
 class Target(models.Model):
-    """A web page (plus selector and processor) to watch for changes."""
+    """A web page to watch for changes."""
 
     class SelectorType(models.TextChoices):
         """Supported HTML selector strategies."""
@@ -34,6 +29,12 @@ class Target(models.Model):
         SUCCESS = "success", "Success"
         FAILURE = "failure", "Failure"
 
+    class FetchMethod(models.TextChoices):
+        """Supported backends for retrieving the page."""
+
+        HTTPX = "httpx", "HTTPX"
+        BRIGHTDATA = "brightdata", "Bright Data"
+
     name: models.CharField[str, str] = models.CharField(max_length=200)
     url: models.URLField[str, str] = models.URLField(max_length=2000)
 
@@ -51,6 +52,12 @@ class Target(models.Model):
     )
     processor_config: models.JSONField[dict[str, Any] | None, dict[str, Any] | None] = (
         models.JSONField(null=True, blank=True)
+    )
+
+    fetch_method: models.CharField[str, str] = models.CharField(
+        max_length=50,
+        choices=FetchMethod.choices,
+        default=FetchMethod.HTTPX,
     )
 
     last_run_at: models.DateTimeField[datetime | None, datetime | None] = models.DateTimeField(
@@ -128,9 +135,7 @@ class Observation(models.Model):
     )
     target_id: int
 
-    observed_at: models.DateTimeField[datetime, datetime] = models.DateTimeField(
-        auto_now_add=True
-    )
+    observed_at: models.DateTimeField[datetime, datetime] = models.DateTimeField(auto_now_add=True)
 
     raw_text: models.TextField[str | None, str | None] = models.TextField(null=True, blank=True)
     processed_text: models.TextField[str | None, str | None] = models.TextField(

@@ -64,7 +64,7 @@ def _process_target(run: Run, target: Target) -> bool:
     started = timezone.now()
 
     try:
-        html_text = fetch_html(target.url)
+        html_text = fetch_html(target.fetch_method, target.url)
         texts = extract_texts(html_text, target.selector_type, target.selector)
         raw = ", ".join(texts)
 
@@ -74,9 +74,11 @@ def _process_target(run: Run, target: Target) -> bool:
     except Exception as ex:
         log.exception("Target %s (%s) failed", target.pk, target.name)
         _record_failure(run, target, started, error=f"{type(ex).__name__}: {ex}")
+
         return False
 
     _record_success(run, target, started, raw=raw, processed=processed)
+
     return True
 
 
