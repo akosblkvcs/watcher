@@ -1,7 +1,3 @@
-"""Tests for the watch app."""
-
-from __future__ import annotations
-
 from django.test import TestCase
 from django.urls import reverse
 
@@ -73,32 +69,18 @@ class RunnerStatusTests(TestCase):
 class TargetViewTests(TestCase):
     """Integration tests for target views."""
 
-    def test_create_target_via_form(self) -> None:
-        """POSTing the create form persists a target and redirects."""
-        resp = self.client.post(
-            reverse("watch:target-create"),
-            {
-                "name": "Example",
-                "url": "https://example.com",
-                "selector_type": "css",
-                "selector": "h1",
-                "processor_type": "raw_text",
-                "processor_config": "",
-                "active": "on",
-            },
-        )
+    def test_create_route_is_disabled(self) -> None:
+        """The self-serve create endpoint is retired; targets come from the admin."""
+        resp = self.client.post("/targets/new/", {"name": "Example"})
 
-        self.assertRedirects(resp, reverse("watch:target-list"))
-        self.assertTrue(Target.objects.filter(name="Example").exists())
-
-    def test_invalid_form_rerenders_with_errors(self) -> None:
-        """An invalid submission re-renders the form with field errors."""
-        resp = self.client.post(reverse("watch:target-create"), {"name": ""})
-
-        self.assertEqual(resp.status_code, 200)
-        self.assertFormError(resp.context["form"], "name", "This field is required.")
-        self.assertContains(resp, "This field is required.")
+        self.assertEqual(resp.status_code, 404)
         self.assertFalse(Target.objects.exists())
+
+    def test_create_page_is_not_linked_from_list(self) -> None:
+        """The list page must not link to the retired create endpoint."""
+        resp = self.client.get(reverse("watch:target-list"))
+
+        self.assertNotContains(resp, "/targets/new/")
 
     def test_list_shows_only_active_targets(self) -> None:
         """Inactive targets are hidden from the list page."""

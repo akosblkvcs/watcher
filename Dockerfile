@@ -34,7 +34,9 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/app/.venv/bin:$PATH" \
-    DJANGO_SETTINGS_MODULE=config.settings
+    DJANGO_SETTINGS_MODULE=config.settings \
+    ENVIRONMENT=production \
+    DEBUG=False
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends wget \

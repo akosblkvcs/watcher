@@ -1,7 +1,3 @@
-"""Fetch backends for retrieving target web pages."""
-
-from __future__ import annotations
-
 from collections.abc import Callable
 
 import httpx
@@ -45,9 +41,7 @@ def fetch_with_brightdata(url: str) -> str:
     api_key = settings.BRIGHTDATA_API_KEY
 
     if not api_key:
-        raise ImproperlyConfigured(
-            "BRIGHTDATA_API_KEY must be set to use the 'brightdata' fetch method"
-        )
+        raise ImproperlyConfigured("BRIGHTDATA_API_KEY must be set")
 
     transport = httpx.HTTPTransport(retries=settings.HTTP_RETRIES)
 

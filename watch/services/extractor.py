@@ -1,7 +1,5 @@
 """HTML text extraction via CSS and XPath selectors."""
 
-from __future__ import annotations
-
 from typing import Any, cast
 
 from lxml import html

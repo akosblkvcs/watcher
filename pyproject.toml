@@ -36,6 +36,12 @@ plugins = ["mypy_django_plugin.main"]
 [tool.django-stubs]
 django_settings_module = "config.settings"
 
+[tool.pyright]
+typeCheckingMode = "strict"
+include = ["config", "watch", "manage.py"]
+venvPath = "."
+venv = ".venv"
+
 [tool.ruff]
 line-length = 100
 target-version = "py314"
