@@ -1,7 +1,5 @@
 """Domain models: a Target is watched; each Run produces Observations."""
 
-from __future__ import annotations
-
 from datetime import datetime
 from typing import Any
 
@@ -12,26 +10,18 @@ class Target(models.Model):
     """A web page to watch for changes."""
 
     class SelectorType(models.TextChoices):
-        """Supported HTML selector strategies."""
-
         CSS = "css", "CSS"
         XPATH = "xpath", "XPath"
 
     class ProcessorType(models.TextChoices):
-        """Supported text processors."""
-
         RAW_TEXT = "raw_text", "Raw text"
         MIN_VALUE = "min_value", "Minimum value"
 
     class Status(models.TextChoices):
-        """Outcome status for an individual target check."""
-
         SUCCESS = "success", "Success"
         FAILURE = "failure", "Failure"
 
     class FetchMethod(models.TextChoices):
-        """Supported backends for retrieving the page."""
-
         HTTPX = "httpx", "HTTPX"
         BRIGHTDATA = "brightdata", "Bright Data"
 
@@ -99,8 +89,6 @@ class Run(models.Model):
     """One execution sweep over all active targets."""
 
     class Status(models.TextChoices):
-        """Outcome status for a watch run."""
-
         SUCCESS = "success", "Success"
         PARTIAL = "partial", "Partial"
         FAILURE = "failure", "Failure"

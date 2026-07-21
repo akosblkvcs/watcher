@@ -1,7 +1,3 @@
-"""Forms for the watch app."""
-
-from __future__ import annotations
-
 from typing import ClassVar
 
 from django import forms

@@ -1,7 +1,5 @@
 """Django settings for the watcher project."""
 
-from __future__ import annotations
-
 import os
 from pathlib import Path
 from typing import Any
@@ -50,9 +48,23 @@ def _env_list(name: str) -> list[str]:
 
 # Core
 
+ENVIRONMENTS = {"development", "production"}
+
+ENVIRONMENT = _env_str("ENVIRONMENT").strip().lower()
+
+if ENVIRONMENT not in ENVIRONMENTS:
+    raise ImproperlyConfigured(
+        f"ENVIRONMENT must be one of {sorted(ENVIRONMENTS)}, got {ENVIRONMENT!r}"
+    )
+
+IS_PRODUCTION = ENVIRONMENT == "production"
+
 SECRET_KEY = _env_str("SECRET_KEY")
 DEBUG = _env_bool("DEBUG")
 ALLOWED_HOSTS = _env_list("ALLOWED_HOSTS")
+
+if IS_PRODUCTION and DEBUG:
+    raise ImproperlyConfigured("DEBUG must be False when ENVIRONMENT is production")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -135,7 +147,7 @@ STORAGES = {
 
 # Hashed + compressed static files only in production; the manifest
 # requires collectstatic, which dev servers and tests don't run.
-if not DEBUG:
+if IS_PRODUCTION:
     STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
     # TLS terminates at the reverse proxy (Traefik); trust its

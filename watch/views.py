@@ -1,9 +1,6 @@
-"""Views for the watch app (thin — logic lives in models/services)."""
-
-from __future__ import annotations
+"""Views for the watch app (thin — logic lives in models and services)."""
 
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpRequest, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, TemplateView
 
@@ -15,11 +12,6 @@ class HomeView(TemplateView):
     """Dashboard landing page."""
 
     template_name = "watch/home.html"
-
-
-def healthz(_request: HttpRequest) -> JsonResponse:
-    """Return application liveness status."""
-    return JsonResponse({"status": "ok"})
 
 
 class TargetListView(ListView[Target]):
@@ -35,7 +27,7 @@ class TargetCreateView(SuccessMessageMixin[TargetForm], CreateView[Target, Targe
     model = Target
     form_class = TargetForm
     success_url = reverse_lazy("watch:target-list")
-    success_message = "Target “%(name)s” created."
+    success_message = 'Target "%(name)s" created.'
 
 
 class ObservationListView(ListView[Observation]):

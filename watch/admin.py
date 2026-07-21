@@ -1,7 +1,3 @@
-"""Admin registrations — full CRUD for targets, read-mostly for results."""
-
-from __future__ import annotations
-
 from django.contrib import admin
 
 from watch.models import Observation, Run, Target

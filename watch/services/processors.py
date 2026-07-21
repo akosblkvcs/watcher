@@ -1,7 +1,3 @@
-"""Text processors that transform extracted content."""
-
-from __future__ import annotations
-
 import re
 from collections.abc import Callable
 from typing import Any
@@ -24,18 +20,15 @@ def min_value(values: list[str], config: dict[str, Any]) -> str:
 
     nums: list[float] = []
     for v in values:
-        # 1. Remove all whitespace
         clean_v = re.sub(r"\s+", "", v)
 
-        # 2. Normalize based on separator config
         if is_comma:
-            # Assumes dot is thousands separator: 1.234,56 -> 1234.56
+            # Assumes dot is the thousands separator: 1.234,56 -> 1234.56
             text = clean_v.replace(".", "").replace(",", ".")
         else:
-            # Assumes comma is thousands separator: 1,234.56 -> 1234.56
+            # Assumes comma is the thousands separator: 1,234.56 -> 1234.56
             text = clean_v.replace(",", "")
 
-        # 3. Extract the numeric component
         if match := re.search(r"\d+(?:\.\d+)?", text):
             nums.append(float(match.group(0)))
 

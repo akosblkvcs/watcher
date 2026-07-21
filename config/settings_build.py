@@ -1,16 +1,11 @@
-"""Settings for build-time collectstatic only.
-
-Usage:
-    DJANGO_SETTINGS_MODULE=config.settings_build manage.py collectstatic
-"""
-
-from __future__ import annotations
+"""Settings for build-time collectstatic only."""
 
 import os
 
 _BUILD_PLACEHOLDERS = {
     "DATABASE_URL": "postgres://build:build@localhost/build",
     "SECRET_KEY": "build-only",
+    "ENVIRONMENT": "production",
     "DEBUG": "False",
     "ALLOWED_HOSTS": "localhost",
     "LOG_LEVEL": "INFO",
